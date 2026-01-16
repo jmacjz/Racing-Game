@@ -5,7 +5,7 @@ public class CarMovement : MonoBehaviour
 {
     Rigidbody rb;
     [SerializeField]
-    private float accelerationSpeed, maxSpeed;
+    private float accelerationSpeed, maxSpeed, brakeStrength, deccelerationSpeed;
     [SerializeField]
     private bool accelerating, braking;
 
@@ -35,12 +35,17 @@ public class CarMovement : MonoBehaviour
     public void Movement()
     {
         if (accelerating)
+        {
             rb.AddForce(new Vector3(0, 0, accelerationSpeed), ForceMode.Acceleration);
+        }
 
         if (braking)
         {
             rb.AddForce(new Vector3(0, 0, -accelerationSpeed), ForceMode.Acceleration);
         }
+
+        if (accelerating == false)
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, Vector3.zero, deccelerationSpeed * Time.fixedDeltaTime);
     }
 
     public void Drive(InputAction.CallbackContext context)
