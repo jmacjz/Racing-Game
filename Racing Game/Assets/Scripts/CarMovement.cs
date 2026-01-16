@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class CarMovement : MonoBehaviour
 {
     Rigidbody rb;
     [SerializeField]
-    private float accelerationSpeed, maxSpeed, brakeStrength, deccelerationSpeed;
+    private float accelerationSpeed, maxSpeed, brakeStrength, deccelerationSpeed, turnSpeed, knockbackForce, knockbackDuration, horizontal;
     [SerializeField]
-    private bool accelerating, braking;
+    private bool accelerating, braking, knockedBack;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,11 +20,11 @@ public class CarMovement : MonoBehaviour
     void FixedUpdate()
     {
         
-        if (rb.linearVelocity.z > maxSpeed)
+        if (rb.linearVelocity.z > maxSpeed && !knockedBack)
         {
             rb.linearVelocity = new Vector3(0, 0, maxSpeed);
         }
-        else if (rb.linearVelocity.z <= 0)
+        else if (rb.linearVelocity.z <= 0 && !knockedBack)
         { 
             rb.linearVelocity = new Vector3(0, 0, 0);
             braking = false;
@@ -34,9 +35,12 @@ public class CarMovement : MonoBehaviour
 
     public void Movement()
     {
+        Vector3 direction = transform.forward;
+        transform.Rotate(new Vector3(0, horizontal, 0) * turnSpeed * Time.deltaTime);
+
         if (accelerating)
         {
-            rb.AddForce(new Vector3(0, 0, accelerationSpeed), ForceMode.Acceleration);
+            rb.AddForce(direction * accelerationSpeed, ForceMode.Acceleration);
         }
 
         if (braking)
@@ -73,5 +77,35 @@ public class CarMovement : MonoBehaviour
             braking = false;
         }
 
+    }
+
+    public void Move(InputAction.CallbackContext context)
+    {
+        horizontal = context.ReadValue<Vector2>().x;
+    }
+
+    public void TakeKnockback(Collision collision)
+    {
+        knockedBack = true;
+        Vector3 direction = -transform.forward;
+
+        rb.AddForce(direction * knockbackForce, ForceMode.Impulse);
+
+        StartCoroutine(EndKnockback());
+    }
+
+
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.layer == 6)
+        {
+            TakeKnockback(col);
+        }
+    }
+
+    IEnumerator EndKnockback()
+    {
+        yield return new WaitForSeconds(knockbackDuration);
+        knockedBack = false;
     }
 }
