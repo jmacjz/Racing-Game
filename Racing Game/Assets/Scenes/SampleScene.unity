@@ -343,7 +343,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: 63.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -747,14 +747,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f91037bbf5ac0040b42ef5bf75b5828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accelerationSpeed: 20
+  accelerationSpeed: 1
   maxSpeed: 200
   brakeStrength: 15
   deccelerationSpeed: 2
-  turnSpeed: 50
+  turnSpeed: 15
   knockbackForce: 10
   knockbackDuration: 0.3
   horizontal: 0
+  strafeDirection: 0
   accelerating: 0
   braking: 0
   knockedBack: 0
@@ -767,7 +768,7 @@ Rigidbody:
   m_GameObject: {fileID: 934814452}
   serializedVersion: 4
   m_Mass: 0.1
-  m_Drag: 0
+  m_Drag: 0.2
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -898,6 +899,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: a8fb1b11-f208-48ab-94a3-fac285b866a8
     m_ActionName: 'Player/Brake[/Keyboard/b]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 934814453}
+        m_TargetAssemblyTypeName: CarMovement, Assembly-CSharp
+        m_MethodName: Strafe
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 6652ae2c-ae48-4710-8ed3-369adf469b35
+    m_ActionName: 'Player/Strafe[/Keyboard/q,/Keyboard/e]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -986,7 +1003,7 @@ Transform:
   m_GameObject: {fileID: 934814452}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: -1.63, z: 3}
+  m_LocalPosition: {x: 1, y: -1.63, z: 58.9}
   m_LocalScale: {x: 1, y: 1.2183, z: 3.8458767}
   m_ConstrainProportionsScale: 0
   m_Children: []

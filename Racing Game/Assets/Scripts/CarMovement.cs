@@ -1,12 +1,13 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using UnityEngine.Rendering;
 
 public class CarMovement : MonoBehaviour
 {
     Rigidbody rb;
     [SerializeField]
-    private float accelerationSpeed, maxSpeed, brakeStrength, deccelerationSpeed, turnSpeed, knockbackForce, knockbackDuration, horizontal;
+    private float accelerationSpeed, maxSpeed, brakeStrength, deccelerationSpeed, turnSpeed, knockbackForce, knockbackDuration, horizontal, strafeDirection;
     [SerializeField]
     private bool accelerating, braking, knockedBack;
 
@@ -31,6 +32,7 @@ public class CarMovement : MonoBehaviour
         }
 
         Movement();
+        Debug.Log(rb.linearVelocity);
     }
 
     public void Movement()
@@ -40,12 +42,12 @@ public class CarMovement : MonoBehaviour
 
         if (accelerating)
         {
-            rb.AddForce(direction * accelerationSpeed, ForceMode.Acceleration);
+            rb.AddForce(direction * accelerationSpeed, ForceMode.VelocityChange);
         }
 
         if (braking)
         {
-            rb.AddForce(new Vector3(0, 0, -accelerationSpeed), ForceMode.Acceleration);
+            rb.AddForce(new Vector3(0, 0, -brakeStrength), ForceMode.Acceleration);
         }
 
         if (accelerating == false)
@@ -84,12 +86,31 @@ public class CarMovement : MonoBehaviour
         horizontal = context.ReadValue<Vector2>().x;
     }
 
+    public void Strafe(InputAction.CallbackContext context)
+    {
+        strafeDirection = context.ReadValue<Vector2>().x;
+
+        if (strafeDirection < 0)
+        {
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, rb.linearVelocity.z);
+            rb.linearVelocity = new Vector3(-10, rb.linearVelocity.y, rb.linearVelocity.z);
+        }
+        else if (strafeDirection > 0)
+        {
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, rb.linearVelocity.z);
+            rb.linearVelocity = new Vector3(10, rb.linearVelocity.y, rb.linearVelocity.z);
+        }
+        else
+            rb.linearVelocity = rb.linearVelocity;
+            
+    }
+
     public void TakeKnockback(Collision collision)
     {
         knockedBack = true;
         Vector3 direction = -transform.forward;
 
-        rb.AddForce(direction * knockbackForce, ForceMode.Impulse);
+        rb.AddForce(direction * knockbackForce, ForceMode.Acceleration);
 
         StartCoroutine(EndKnockback());
     }
