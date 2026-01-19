@@ -27,6 +27,7 @@ public class CarMovement : MonoBehaviour
         }
         else if (rb.linearVelocity.z <= 0 && !knockedBack)
         { 
+            rb.linearVelocity = new Vector3(0, 0, 0);
             braking = false;
         }
 
@@ -54,7 +55,7 @@ public class CarMovement : MonoBehaviour
         }
 
         if (accelerating == false)
-            rb.AddRelativeForce(new Vector3(0, 0, -deccelerationSpeed), ForceMode.Acceleration);
+            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, Vector3.zero, deccelerationSpeed * Time.fixedDeltaTime);
     }
 
     public void Drive(InputAction.CallbackContext context)
