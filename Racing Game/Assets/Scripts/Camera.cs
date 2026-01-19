@@ -8,6 +8,8 @@ public class Camera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = player.position + offset;
+        Vector3 rotatedOffset = player.rotation * offset;
+        transform.position = player.position + rotatedOffset;
+        transform.LookAt(player);
     }
 }
