@@ -38,7 +38,7 @@ public class CarMovement : MonoBehaviour
     public void Movement()
     {
         Vector3 direction = transform.forward;
-        transform.Rotate(new Vector3(0, horizontal, 0) * turnSpeed * Time.deltaTime);
+        //transform.Rotate(new Vector3(0, horizontal, 0) * turnSpeed * Time.deltaTime);
 
         if (accelerating)
         {
