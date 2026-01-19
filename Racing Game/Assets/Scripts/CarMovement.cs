@@ -27,7 +27,6 @@ public class CarMovement : MonoBehaviour
         }
         else if (rb.linearVelocity.z <= 0 && !knockedBack)
         { 
-            rb.linearVelocity = new Vector3(0, 0, 0);
             braking = false;
         }
 
