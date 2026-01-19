@@ -55,7 +55,7 @@ public class CarMovement : MonoBehaviour
         }
 
         if (accelerating == false)
-            rb.linearVelocity = Vector3.Lerp(rb.linearVelocity, Vector3.zero, deccelerationSpeed * Time.fixedDeltaTime);
+            rb.AddRelativeForce(new Vector3(0, 0, -deccelerationSpeed), ForceMode.Acceleration);
     }
 
     public void Drive(InputAction.CallbackContext context)
