@@ -38,16 +38,20 @@ public class CarMovement : MonoBehaviour
     public void Movement()
     {
         Vector3 direction = transform.forward;
-        //transform.Rotate(new Vector3(0, horizontal, 0) * turnSpeed * Time.deltaTime);
+        transform.Rotate(new Vector3(0, horizontal, 0) * turnSpeed * Time.deltaTime);
+
+        Vector3 localVelocity = transform.InverseTransformDirection(rb.linearVelocity);
+        localVelocity.x = 0;
+        rb.linearVelocity = transform.TransformDirection(localVelocity);
 
         if (accelerating)
         {
-            rb.AddForce(direction * accelerationSpeed, ForceMode.VelocityChange);
+            rb.AddRelativeForce(direction * accelerationSpeed, ForceMode.VelocityChange);
         }
 
         if (braking)
         {
-            rb.AddForce(new Vector3(0, 0, -brakeStrength), ForceMode.Acceleration);
+            rb.AddRelativeForce(new Vector3(0, 0, -brakeStrength), ForceMode.Acceleration);
         }
 
         if (accelerating == false)
