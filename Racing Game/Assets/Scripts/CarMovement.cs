@@ -19,7 +19,8 @@ public class CarMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Drive();
+        if(!knockedBack)
+            Drive();
         Debug.Log(Mathf.Abs(rb.linearVelocity.z));
     }
 
@@ -70,8 +71,10 @@ public class CarMovement : MonoBehaviour
     public void TakeKnockback(Collision collision)
     {
         knockedBack = true;
+        
+        Vector3 knockDir = collision.contacts[0].normal; // opposite direction of collision 
 
-        rb.AddRelativeForce(transform.forward * -knockbackForce, ForceMode.Acceleration);
+        rb.AddRelativeForce(knockDir * knockbackForce, ForceMode.Impulse);
 
         StartCoroutine(EndKnockback());
     }
