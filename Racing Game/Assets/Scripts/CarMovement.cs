@@ -7,7 +7,7 @@ public class CarMovement : MonoBehaviour
 {
     Rigidbody rb;
     [SerializeField]
-    private float accelRate, maxSpeed, brakeStrength, deccelRate, turnStrength, knockbackForce, knockbackDuration, horizontal, strafeDirection;
+    private float accelRate, maxSpeed, brakeStrength, deccelRate, turnStrength, strafeSpeed, knockbackForce, knockbackDuration, horizontal, strafeDirection;
     [SerializeField]
     private bool accelerating, braking, knockedBack;
 
@@ -37,14 +37,19 @@ public class CarMovement : MonoBehaviour
         else if (!accelerating && !braking && localVelocity.z > 0)
             rb.AddRelativeForce(Vector3.back * deccelRate, ForceMode.Acceleration);
 
-        if (horizontal > 0)
+        if (horizontal > 0 && localVelocity.z >= 0.01f)
         {
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, horizontal * turnStrength * Time.fixedDeltaTime, 0f));
         }
-        else if (horizontal < 0)
+        else if (horizontal < 0 && localVelocity.z >= 0.01f)
         {
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, horizontal * turnStrength * Time.fixedDeltaTime, 0f));
         }
+
+        if (strafeDirection < 0 && localVelocity.z >= 0.01f)
+            rb.AddRelativeForce(Vector3.left * strafeSpeed * 100);
+        else if (strafeDirection > 0 && localVelocity.z >= 0.01f)
+            rb.AddRelativeForce(Vector3.right * strafeSpeed * 100);
     }
     
     public void Accelerate(InputAction.CallbackContext context)
@@ -66,6 +71,11 @@ public class CarMovement : MonoBehaviour
     public void Turn(InputAction.CallbackContext context)
     {
         horizontal = context.ReadValue<Vector2>().x;
+    }
+
+    public void Strafe(InputAction.CallbackContext context)
+    {
+        strafeDirection = context.ReadValue<Vector2>().x;
     }
 
     public void TakeKnockback(Collision collision)
