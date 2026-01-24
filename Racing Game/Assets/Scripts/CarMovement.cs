@@ -11,6 +11,9 @@ public class CarMovement : MonoBehaviour
     [SerializeField]
     private bool accelerating, braking, knockedBack;
 
+    [SerializeField]
+    private LayerMask groundLayer;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -19,7 +22,9 @@ public class CarMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!knockedBack)
+        GroundCheck();
+
+        if (!knockedBack)
             Drive();
         Debug.Log(Mathf.Abs(rb.linearVelocity.z));
     }
@@ -89,6 +94,20 @@ public class CarMovement : MonoBehaviour
         StartCoroutine(EndKnockback());
     }
 
+    public void GroundCheck()
+    {
+        RaycastHit hit;
+        // Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, groundLayer))
+
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
+        }
+    }
 
     void OnCollisionEnter(Collision col)
     {
