@@ -32,8 +32,20 @@ public class CarMovement : MonoBehaviour
     public void Drive()
     {
         Vector3 localVelocity = transform.InverseTransformDirection(rb.linearVelocity);
-        localVelocity.x = 0;
-        rb.linearVelocity = transform.TransformDirection(localVelocity);
+        if (horizontal > 0 && strafeDirection == 0)
+        {
+            if (localVelocity.x < 0.2)
+                localVelocity.x += 0.01f;
+        }
+        else if (horizontal < 0 && strafeDirection == 0)
+        {
+            if (localVelocity.x > -0.2)
+                localVelocity.x -= 0.01f;
+        }
+        else
+            localVelocity.x = 0;
+
+            rb.linearVelocity = transform.TransformDirection(localVelocity);
 
         if (accelerating && !braking)
             rb.AddRelativeForce(Vector3.forward * accelRate, ForceMode.Acceleration);
